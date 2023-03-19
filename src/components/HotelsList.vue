@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios'
 import {ref, onMounted} from 'vue';
-import {ElTable, ElInput, ElButton, ElFormItem} from 'element-plus'
+import {ElTable, ElInput, ElButton} from 'element-plus'
 
 let hotels = ref(null);
 onMounted(() => {
@@ -55,20 +55,15 @@ function isOdd(numb) {
 </script>
 
 <template>
-  <el-input v-model="name" placeholder="Please input name"/>
-  <el-input v-model="price_from" placeholder="Please input min price"/>
-  <el-input v-model="price_to" placeholder="Please input max price"/>
-  <el-input type="number" v-model="bedrooms" placeholder="Please input number of bedrooms"/>
-  <el-input type="number" v-model="bathrooms" placeholder="Please input number of bathrooms"/>
-  <el-input type="number" v-model="storeys" placeholder="Please input number of storeys"/>
-  <el-form-item>
-    <el-input type="number" v-model="garages" placeholder="Please input number of garages"/>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" class="mtb-20-20" @click="searchForm()">Search</el-button>
-  </el-form-item>
-
-  <hr class="mtb-20-20">
+  <el-input class="input-m" v-model="name" placeholder="Please input name"/>
+  <el-input class="input-m" v-model="price_from" placeholder="Please input min price"/>
+  <el-input class="input-m" v-model="price_to" placeholder="Please input max price"/>
+  <el-input class="input-m" type="number" v-model="bedrooms" placeholder="Please input number of bedrooms"/>
+  <el-input class="input-m" type="number" v-model="bathrooms" placeholder="Please input number of bathrooms"/>
+  <el-input class="input-m" type="number" v-model="storeys" placeholder="Please input number of storeys"/>
+  <el-input class="input-m" type="number" v-model="garages" placeholder="Please input number of garages"/>
+  <el-button type="primary" class="mt-15" @click="searchForm()">Search</el-button>
+  <hr class="mtb-10-15">
   <el-table
       :data="hotels"
       style="width: 100%"
@@ -91,8 +86,17 @@ function isOdd(numb) {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 
-.mtb-20-20 {
+.mtb-10-15 {
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.mt-15 {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.input-m {
+  margin-bottom: 2px;
 }
 </style>
