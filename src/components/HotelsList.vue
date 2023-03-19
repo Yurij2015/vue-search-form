@@ -13,6 +13,7 @@ onMounted(() => {
 });
 
 function searchForm() {
+  const before = Date.now();
   axios
       .get('http://localhost/api/hotel-search', {
         params: {
@@ -26,8 +27,33 @@ function searchForm() {
         }
       })
       .then((response) => {
+        const after = Date.now();
+        const duration = after - before;
+        progressBar(duration);
+        console.log(duration);
         hotels.value = response.data
       })
+}
+
+function progressBar(timeOfRequest) {
+  let i = 0;
+  if (i === 0) {
+    i = 1;
+    let elem = document.getElementById("progressBar");
+    let width = 1;
+    let id = setInterval(frame, timeOfRequest / 100);
+
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+      } else {
+        width++;
+        elem.style.width = width + "%";
+        elem.innerHTML = width + "%";
+      }
+    }
+  }
 }
 
 const name = ref('')
@@ -64,6 +90,9 @@ function isOdd(numb) {
   <el-input class="input-m" type="number" v-model="garages" placeholder="Please input number of garages"/>
   <el-button type="primary" class="mt-15" @click="searchForm()">Search</el-button>
   <hr class="mtb-10-15">
+  <div id="myProgress">
+    <div id="progressBar"></div>
+  </div>
   <el-table
       :data="hotels"
       style="width: 100%"
@@ -98,5 +127,20 @@ function isOdd(numb) {
 
 .input-m {
   margin-bottom: 2px;
+}
+
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#progressBar {
+  width: 0;
+  height: 30px;
+  background-color: #04AA6D;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  margin-bottom: 5px;
 }
 </style>
