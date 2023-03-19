@@ -1,11 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import axios from 'axios'
 import {ref, onMounted} from 'vue';
-import {ElTable} from 'element-plus'
-import 'element-plus/es/components/message/style/css'
+import {ElTable, ElInput, ElButton, ElFormItem} from 'element-plus'
 
-let hotels: Hotel[] = ref(null);
-
+let hotels = ref(null);
 onMounted(() => {
   axios
       .get('http://localhost/api/hotels')
@@ -14,19 +12,33 @@ onMounted(() => {
       })
 });
 
-interface Hotel {
-  name: string
-  price: number
-  bedrooms: number
-  bathrooms: number
-  storeys: number
-  garages: number
+function searchForm() {
+  axios
+      .get('http://localhost/api/hotel-search', {
+        params: {
+          'name': name.value ? name.value : null,
+          'price_from': price_from.value ? price_from.value : null,
+          'price_to': price_to.value ? price_to.value : null,
+          'bedrooms': bedrooms.value ? bedrooms.value : null,
+          'bathrooms': bathrooms.value ? bathrooms.value : null,
+          'storeys': storeys.value ? storeys.value : null,
+          'garages': garages.value ? garages.value : null,
+        }
+      })
+      .then((response) => {
+        hotels.value = response.data
+      })
 }
 
-const tableRowClassName = ({row, rowIndex,}: {
-  row: Hotel
-  rowIndex: number
-}) => {
+const name = ref('')
+const price_from = ref('')
+const price_to = ref('')
+const bedrooms = ref('')
+const bathrooms = ref('')
+const storeys = ref('')
+const garages = ref('')
+
+const tableRowClassName = ({row, rowIndex}) => {
   if (isOdd(rowIndex)) {
     return 'warning-row'
   } else if (!isOdd(rowIndex)) {
@@ -37,17 +49,26 @@ const tableRowClassName = ({row, rowIndex,}: {
 
 function isOdd(numb) {
   let number = numb;
-  if (Math.floor(number / 2) == number / 2) {
-    return false;
-  } else {
-    return true;
-  }
+  return Math.floor(number / 2) !== number / 2;
 }
 
 </script>
 
 <template>
+  <el-input v-model="name" placeholder="Please input name"/>
+  <el-input v-model="price_from" placeholder="Please input min price"/>
+  <el-input v-model="price_to" placeholder="Please input max price"/>
+  <el-input type="number" v-model="bedrooms" placeholder="Please input number of bedrooms"/>
+  <el-input type="number" v-model="bathrooms" placeholder="Please input number of bathrooms"/>
+  <el-input type="number" v-model="storeys" placeholder="Please input number of storeys"/>
+  <el-form-item>
+    <el-input type="number" v-model="garages" placeholder="Please input number of garages"/>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" class="mtb-20-20" @click="searchForm()">Search</el-button>
+  </el-form-item>
 
+  <hr class="mtb-20-20">
   <el-table
       :data="hotels"
       style="width: 100%"
@@ -68,5 +89,10 @@ function isOdd(numb) {
 
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+.mtb-20-20 {
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 </style>
